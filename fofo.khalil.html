@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي النقاط بواسطة خليل</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
+            color: #fff;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .container h1 {
+            font-size: 2em;
+            animation: colorChange 3s infinite;
+        }
+
+        @keyframes colorChange {
+            0% { color: #ff6347; }
+            25% { color: #1e90ff; }
+            50% { color: #32cd32; }
+            75% { color: #ffeb3b; }
+            100% { color: #ff6347; }
+        }
+
+        .field-group {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .field {
+            margin: 0 20px;
+            text-align: center;
+        }
+
+        .field label {
+            font-size: 1.5em;
+            font-family: 'Cursive';
+        }
+
+        .field input {
+            width: 80px;
+            height: 50px;
+            font-size: 1.5em;
+            text-align: center;
+            border: none;
+            border-radius: 10px;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .field .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .field button {
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            margin: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            font-size: 1.2em;
+        }
+
+        .field button:active {
+            transform: scale(0.9);
+        }
+
+        .fire-effect {
+            animation: fire 0.6s;
+        }
+
+        @keyframes fire {
+            0% { background: orange; }
+            50% { background: red; }
+            100% { background: transparent; }
+        }
+
+        .reset {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            color: #fff;
+            background: red;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .reset:hover {
+            background: darkred;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>النقـــاط المكتـــسبة</h1>
+        <div class="field-group">
+            <div class="field">
+                <label for="khalil">Khalil</label><br>
+                <input type="number" id="khalil" value="0" readonly>
+                <div class="controls">
+                    <button onclick="increment('khalil')">&#9650;</button>
+                    <button onclick="decrement('khalil')">&#9660;</button>
+                </div>
+            </div>
+            <div class="field">
+                <label for="fawzia">Fawzia</label><br>
+                <input type="number" id="fawzia" value="0" readonly>
+                <div class="controls">
+                    <button onclick="increment('fawzia')">&#9650;</button>
+                    <button onclick="decrement('fawzia')">&#9660;</button>
+                </div>
+            </div>
+        </div>
+        <button class="reset" onclick="resetFields()">Reset</button>
+    </div>
+
+    <script>
+        function loadValues() {
+            document.getElementById('khalil').value = localStorage.getItem('khalil') || 0;
+            document.getElementById('fawzia').value = localStorage.getItem('fawzia') || 0;
+        }
+
+        function saveValue(field, value) {
+            localStorage.setItem(field, value);
+        }
+
+        function increment(fieldId) {
+            const field = document.getElementById(fieldId);
+            let value = parseInt(field.value);
+            value++;
+            field.value = value;
+            saveValue(fieldId, value);
+            field.classList.add('fire-effect');
+            setTimeout(() => field.classList.remove('fire-effect'), 600);
+        }
+
+        function decrement(fieldId) {
+            const field = document.getElementById(fieldId);
+            let value = parseInt(field.value);
+            if (value > 0) {
+                value--;
+                field.value = value;
+                saveValue(fieldId, value);
+            }
+        }
+
+        function resetFields() {
+            document.getElementById('khalil').value = 0;
+            document.getElementById('fawzia').value = 0;
+            saveValue('khalil', 0);
+            saveValue('fawzia', 0);
+        }
+
+        window.onload = loadValues;
+    </script>
+</body>
+</html>
