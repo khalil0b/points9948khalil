@@ -64,6 +64,7 @@
             border-radius: 10px;
             outline: none;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            background-color: #f0f0f0;
         }
 
         .field .controls {
@@ -167,7 +168,7 @@
     <div class="login" id="loginModal">
         <form onsubmit="handleLogin(event)">
             <h2>Login</h2>
-            <input type="text" id="username" placeholder="باسورد للتعديل على نقاط" required>
+            <input type="text" id="username" placeholder="كود لتعديل النقاط" required>
             <button type="submit">Login</button>
         </form>
     </div>
@@ -197,7 +198,7 @@
     </div>
 
     <script>
-        const allowedUsers = ["1", "2"];
+        const allowedUsers = ["12"];  // The correct password for the authorized user
         let currentUser = null;
 
         function handleLogin(event) {
@@ -206,6 +207,7 @@
             if (allowedUsers.includes(username)) {
                 currentUser = username;
                 document.getElementById("loginModal").style.display = "none";
+                alert("تم تسجيل الدخول بنجاح!");
             } else {
                 alert("Access denied");
             }
