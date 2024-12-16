@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحدي النقاط بواسطة خليل</title>
+    <title>تحدي النقاطـ بواسطة خليل </title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -114,11 +114,66 @@
         .reset:hover {
             background: darkred;
         }
+
+        .log {
+            margin-top: 20px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            max-height: 100px;
+            overflow-y: auto;
+            color: #fff;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .login {
+            position: fixed;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .login input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 200px;
+        }
+
+        .login button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
+    <div class="login" id="loginModal">
+        <form onsubmit="handleLogin(event)">
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="باسورد للتعديل على نقاط" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
     <div class="container">
-        <h1>النقـــاط المكتـــسبة</h1>
+        <h1>Dynamic Counter Fields</h1>
         <div class="field-group">
             <div class="field">
                 <label for="khalil">Khalil</label><br>
@@ -138,12 +193,28 @@
             </div>
         </div>
         <button class="reset" onclick="resetFields()">Reset</button>
+        <div class="log" id="log"></div>
     </div>
 
     <script>
+        const allowedUsers = ["1", "2"];
+        let currentUser = null;
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById("username").value;
+            if (allowedUsers.includes(username)) {
+                currentUser = username;
+                document.getElementById("loginModal").style.display = "none";
+            } else {
+                alert("Access denied");
+            }
+        }
+
         function loadValues() {
             document.getElementById('khalil').value = localStorage.getItem('khalil') || 0;
             document.getElementById('fawzia').value = localStorage.getItem('fawzia') || 0;
+            updateLog("تم تفعيل لوحة كشف الغش.");
         }
 
         function saveValue(field, value) {
@@ -151,30 +222,55 @@
         }
 
         function increment(fieldId) {
+            if (!currentUser) {
+                alert("You are not authorized to modify this field.");
+                return;
+            }
+
             const field = document.getElementById(fieldId);
             let value = parseInt(field.value);
             value++;
             field.value = value;
             saveValue(fieldId, value);
+            updateLog(`${currentUser} incremented ${fieldId} to ${value}.`);
             field.classList.add('fire-effect');
             setTimeout(() => field.classList.remove('fire-effect'), 600);
         }
 
         function decrement(fieldId) {
+            if (!currentUser) {
+                alert("You are not authorized to modify this field.");
+                return;
+            }
+
             const field = document.getElementById(fieldId);
             let value = parseInt(field.value);
             if (value > 0) {
                 value--;
                 field.value = value;
                 saveValue(fieldId, value);
+                updateLog(`${currentUser} decremented ${fieldId} to ${value}.`);
             }
         }
 
         function resetFields() {
+            if (!currentUser) {
+                alert("You are not authorized to reset fields.");
+                return;
+            }
+
             document.getElementById('khalil').value = 0;
             document.getElementById('fawzia').value = 0;
             saveValue('khalil', 0);
             saveValue('fawzia', 0);
+            updateLog(`${currentUser} reset all fields to 0.`);
+        }
+
+        function updateLog(message) {
+            const log = document.getElementById("log");
+            const time = new Date().toLocaleTimeString();
+            log.innerHTML += `<p>[${time}] ${message}</p>`;
+            log.scrollTop = log.scrollHeight;
         }
 
         window.onload = loadValues;
